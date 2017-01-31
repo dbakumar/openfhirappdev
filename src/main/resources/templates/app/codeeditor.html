@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head lang="en"  >
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+    #editorJS { 
+        position: absolute;
+        top: 150px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    
+     #editorHTML { 
+        position: absolute;
+        top: 150px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    
+    #editorCSS { 
+        position: absolute;
+        top: 150px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>  
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+</head>
+<body>
+	<div class="container">
+	 <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Apps</a></li>
+            <li role="presentation"><a href="#">Contact</a></li>
+            <li role="presentation"><a th:href="@{/logout}" href="#">Logout</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">FHIRAppCloud</h3>
+	<input type="button" value="Save All" id="showAlert" />
+		 <ul class="nav nav-tabs" role="tablist">
+	 	 	
+		   <li><a href="#" onclick="openEditor('HTML')">HTML</a></li>
+		   <li><a href="#" onclick="openEditor('CSS')">CSS</a></li>
+		   <li><a href="#" onclick="openEditor('JS')">JS</a></li>
+		 </ul>
+		<div id ="JS" class="customTab">
+		 	<div id="editorJS">function foo(items) {
+			    var x = "All this is syntax highlighted";
+			    return x;
+			}</div>
+		</div>
+		<div id ="HTML"  class="customTab">
+			<div id="editorHTML">  
+			</div>
+		</div>
+		
+		<div id ="CSS"  class="customTab">
+			<div id="editorCSS"> .customTab {font-size : 30px;}
+			</div>
+		</div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
+ 
+<script>
+    var editorJS = ace.edit("editorJS");
+    editorJS.setTheme("ace/theme/monokai");
+    editorJS.getSession().setMode("ace/mode/javascript");
+    
+    var editorHTML = ace.edit("editorHTML");
+    editorHTML.setTheme("ace/theme/monokai");
+    editorHTML.getSession().setMode("ace/mode/html");
+    
+    var editorCSS = ace.edit("editorCSS");
+    editorCSS.setTheme("ace/theme/monokai");
+    editorCSS.getSession().setMode("ace/mode/CSS");
+    
+	$(function () { 
+		
+		$('#showAlert').click(function() {
+	     
+	        alert(ace.edit("editorHTML").getSession().getValue());
+	        alert(ace.edit("editorJS").getSession().getValue());
+	        alert(ace.edit("editorCSS").getSession().getValue());
+	    });
+		
+		
+    
+    });
+</script>
+<script>
+	function openEditor(editorName){
+		
+		$(".customTab").each(function() { 
+			 $(this).hide();
+		});
+		
+		$('#'+editorName).show();
+	}
+</script>
+ 
+</body>
+</html>

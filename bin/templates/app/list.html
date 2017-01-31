@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="login :: globalinclude">
+</head>
+<body>
+	<div class="container">
+	<div th:replace="menu :: globalmenu"></div>
+	<h1>My Apps</h1>
+		
+		<table class="table">
+		  <tr>
+		  	<th>App_ID</th>
+		  	<th>App_Name</th>
+		  	<th>FHIR_OAuthKey</th>
+		  </tr>
+		  <tr th:each="app : ${appList}">
+		        <td th:text="${app.id}">1</td>
+		        <td><a href="#" th:href="@{'/app/' + ${app.id} + '/code'}" th:text="${app.name}">Title ...</a></td>
+		        <td th:text="${app.oauthKey}">Text ...</td>
+		    </tr>
+		</table>
+	</div>
+</body>
+</html>
