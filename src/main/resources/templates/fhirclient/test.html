@@ -2,13 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
  
-    <title>FHIR Client</title>
+    <title>Client</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src='http://code.jquery.com/jquery-2.1.4.min.js'></script>
+    <script  th:src="@{/js/fhir-client.js}"  ></script>
+    <script th:inline="javascript">
+	/*<![CDATA[*/
+	var FHIRAPPCLOUD = {
+			  serviceUrl: 'https://open-ic.epic.com/FHIR/api/FHIR/DSTU2',
+			  patientId: [[${patientFHIRAccess.patient}]] , 
+			  auth:  { type : 'bearer' , bearer : [[${patientFHIRAccess.accessToken}]] } ,
+	}
+
+	/*]]>*/
+	</script>
 </head>
 <body>
-<h1>Fhir Client </h1>
-<h1><td th:text="${patientFHIRAccess.patient}">1</td> </h1>
-<h1><td th:text="${patientFHIRAccess.patient}">1</td> </h1>
+<h1>Client </h1>
+<h1>Hello <span id="patient_name">...</span>!</h1>
+
+<ul id="med_list"></ul>
+ 
+
+
+
+<script>
+/*<![CDATA[*/
+	var smart = FHIR.client(FHIRAPPCLOUD);
+	
+	//var pq = smart.patient.Something.read();
     
+	var pq = smart.patient.read(); 	
+	pq.then(function(p) {
+	  var name = p.name[0];
+	  var formatted = name.given.join(" ") + " " + name.family.join(" ");
+	   $("#patient_name").text(formatted);
+	   $("#patient_name").append( JSON.stringify(p));
+	   console.log(p);
+	   //eachRecursive(p,   "#patient_name" );
+	});
+	
+	var aller = smart.patient.api.read({type: "AllergyIntolerance", id: smart.patientId})
+	aller.then(function(p) {
+	  var name = p.name[0];
+	  var formatted = name.given.join(" ") + " " + name.family.join(" ");
+	   $("#patient_name").text(formatted);
+	   $("#patient_name").append( JSON.stringify(p));
+	   console.log(p);
+	   //eachRecursive(p,   "#patient_name" );
+	});
+	
+	
+	/* Create a medication list */
+	smart.patient.api.search({type: "MedicationOrder", query: {patient: smart.patientId}
+	  }).then(function(r){
+	      r.data.entry.forEach(function(re) {
+	        var rx = re.resource;
+	        var row = $("<li> " + rx.medicationCodeableConcept.text + "</li>");
+	        $("#med_list").append(row);
+	      });
+	  });
+	
+	// This function handles arrays and objects
+	function eachRecursive(obj, eleObj)
+	{
+	    for (var k in obj)
+	    {
+	        if (typeof obj[k] == "object" && obj[k] !== null) {
+	        	$(eleObj).append(" Object Name " +  key + "<br>");
+	            eachRecursive(obj[k]);
+	        }
+	        else {
+	        	//console.log ( "" + k + "  :: " + obj[k]);
+	        	$(eleObj).append("" + k + "  :: " + obj[k] +  "<br>");
+	        }
+	        
+	         
+	    }
+	}
+	  
+	/*]]>*/
+
+</script>
+
+ 
+ 
 </body>
 </html>

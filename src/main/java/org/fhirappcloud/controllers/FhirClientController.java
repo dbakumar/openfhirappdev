@@ -1,6 +1,7 @@
 package org.fhirappcloud.controllers;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.fhirappcloud.domain.App;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/fhirclient")
@@ -34,15 +36,26 @@ public class FhirClientController {
 	  }
 	
 	@RequestMapping(value="/app/{appId}/launch")
-	public String showProfilePathVar(@PathVariable("appId") String appId, String launch, String iss, Model model){
+	public String showProfilePathVar(@PathVariable("appId") String appId, String launch, String iss, Model model, HttpSession session){
 		App app = appService.getApp(Long.parseLong(appId));
+		
 		PatientFHIRAccess patientFHIRAccess = httpOAuthService.getAuthCode("https://open-ic.epic.com/Argonaut/oauth2/authorize", app.getOauthKey(), "http://localhost:8080/fhirclient/app/1/redirect", launch, "testvijaystate");
-	    System.out.println(httpRequest.getPathInfo()); 
-	    System.out.println(httpRequest.getQueryString());
+	    //System.out.println(httpRequest.getPathInfo()); 
+	   // System.out.println(httpRequest.getQueryString());
 	    System.out.println(patientFHIRAccess.getAccessToken());
-	    
+	 
+	    session.setAttribute("patientFHIRAccess" ,patientFHIRAccess);
 	    model.addAttribute( "patientFHIRAccess" ,patientFHIRAccess);
-	    return "/fhirclient/test";
+	    
+	    return "redirect:/fhirclient/app/execute";
+	}
+	
+	@RequestMapping(value="/app/execute")
+	public String executeClientApp(  Model model, HttpSession session){
+		
+		 PatientFHIRAccess patientFHIRAccess = (PatientFHIRAccess) session.getAttribute("patientFHIRAccess");
+		 model.addAttribute( "patientFHIRAccess" ,patientFHIRAccess);
+		return "/fhirclient/test";
 	}
 	
 	@RequestMapping(value="/app/{appId}/redirect")

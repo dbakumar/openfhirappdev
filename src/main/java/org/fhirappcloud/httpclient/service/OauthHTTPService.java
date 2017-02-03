@@ -107,7 +107,7 @@ public class OauthHTTPService {
 					    String patient = patientNode.asText();
 					    System.out.println(patient);
 						patientFHIRAccess = mapper.readValue(tokenData ,  PatientFHIRAccess.class);
-						
+						 
 						
 						
 						

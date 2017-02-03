@@ -1,11 +1,14 @@
 package org.fhirappcloud.domain;
 
+import org.fhirappcloud.util.Utility;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+ 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PatientFHIRAccess {
-	
+public class PatientFHIRAccess{
+ 
 	@JsonProperty("access_token")
 	String accessToken;
 	
@@ -23,6 +26,8 @@ public class PatientFHIRAccess {
 	
 	@JsonProperty("patient")
 	String patient;
+	
+ 
 
 	public String getAccessToken() {
 		return accessToken;
@@ -72,5 +77,6 @@ public class PatientFHIRAccess {
 		this.patient = patient;
 	}
 	
-	
+ 
+ 
 }
